@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+    {% block title %} {{ movie.title }} {% endblock %}
+
+{% block friend_list %}
+    <p style="color: blue">How do you like it?</p>
+    <form action="{% url rate_movie movie.mid %}" method="post">
+    {% csrf_token %}
+        <input type="radio" name="choice" id="1" value="5"/>
+        <label for="1">5 stars: love it!!!</label><br>
+        <input type="radio" name="choice" id="2" value="4"/>
+        <label for="2">4 stars: really like it!!</label><br>
+        <input type="radio" name="choice" id="3" value="3"/>
+        <label for="3">3 stars: like it!</label><br>
+        <input type="radio" name="choice" id="4" value="2"/>
+        <label for="4">2 stars: don't like it!!</label><br>
+        <input type="radio" name="choice" id="5" value="1"/>
+        <label for="5">1 star: hate it!!!</label><br>
+        <br>
+        Review:<br>
+        <textarea rows="10" cols="40" name="review" ></textarea>
+        <input type="submit" value="Submit"/>
+    </form>
+{% endblock %}
+
+{% block content %}
+      <div id="container">
+        <div id="poster" style="display:inline-block;margin: 5px;vertical-align: top">
+            <img src="{{ poster.0.original }}" height= "390px" width="260px"/>
+        </div>
+        <div id="movie_info" style="display:inline-block;margin: 5px">
+         <div id="movie" >
+             <b>{{ movie.title }}</b><br>
+             IMDB rating: {{ rating.0.rating }}/10<br/>
+             {% for g in genre %}
+             |{{ g.genre  }}
+             {% endfor %}<br/>
+             mapp: {{ mapp.0.certificate }}<br/>
+             runtime: {{ runtime.0.runtime }} min<br/>
+         </div>
+          <div id="cast" >
+              <br/>
+              Director:
+              <ul>
+              {% for d in director %}
+                 <li><a href="{% url show_all_movies_director d.director.did %}" style="text-decoration: none">{{ d.director.name }}</a></li>
+              {% endfor %}
+              </ul>
+              <br/>
+              Stars:<br/>
+              <ul>
+              {% for s in star %}
+                  <li><a href="{% url show_all_movies s.performer.pid %}" style="text-decoration: none">{{ s.performer.name }}</a></li>
+              {% endfor %}
+              </ul>
+          </div>
+          {% if user_rating %}
+          <div id="user_rating">
+              <p style="color: blue">Your Rating: <em style="color: red">{{ user_rating.0.rating }} stars</em></p>
+          </div>
+          {% endif %}
+
+            {% if average_rating %}
+                <div id="average_rating">
+                    <p style="color: blue"> Rating on Movie Net : <em style="color: red">{{ average_rating.rating__avg|floatformat:2 }} stars</em></p>
+                </div>
+            {% endif %}
+
+        </div>
+
+        {% if positive_critic or negative_critic %}
+        <div id="critic_review" style="margin: 0 auto">
+        <h3 style="color:blue">Critic Reviews</h3>
+          <div id="positive_review" style="width:275px;display: inline-block;vertical-align: top;margin: 10px;border-right: solid #a52a2a">
+              <h4>Positive</h4>
+              {% if positive_critic %}
+                 {% for p in positive_critic %}
+                     <div id="one_review" style="margin: 15px;background-color: #fff8dc">
+                     <b style="color: blue;">{{ p.critic }}</b><br/>
+                     <em style="color:gray;">{{ p.publication }}</em> <br>
+                     <em>freshness: </em> <b style="color:red">{{ p.freshness }}</b><br>
+                     <p>{{ p.quote }}
+                       {% if  p.link != 'NULL' %}
+                             <a href="{{ p.link }}" style="font-size: 12px">--Full Review</a>
+                       {% endif %}
+                     </p>
+                     </div>
+                 {% endfor %}
+              {% endif %}
+              </div>
+
+              <div id="negative_review" style="width:275px;display: inline-block;margin: 10px">
+                  <h4>Negative</h4>
+              {% if negative_critic %}
+                  {% for p in negative_critic %}
+                      <div id="one_review" style="margin: 15px;background-color: #fff8dc">
+                          <b style="color: blue;">{{ p.critic }}</b><br/>
+                          <em style="color:gray;">{{ p.publication }}</em> <br>
+                          <em>freshness: </em> <b style="color:red">{{ p.freshness }}</b><br>
+                          <p>{{ p.quote }}
+                          {% if  p.link != 'NULL' %}
+                          <a href="{{ p.link }}">--Full Review</a>
+                          {% endif %}
+                          </p>
+                      </div>
+                  {% endfor %}
+              {% endif %}
+              </div>
+        </div>
+           {% endif %}
+      </div>
+
+{% endblock %}
+
+{% block siderbar %}
+    <div>
+    {% if recommend_movie %}
+        <h4 style="color:purple">Similar to {{ movie.title }}:</h4>
+       {% for m in recommend_movie %}
+        <div id="one_recommend_movie" style="height: 120px;width: 200px;margin: 10px">
+        <div id="siderbar_poster" style="background: url({{ m.0.thumbnail }}) no-repeat center center;height: 95px;width: 65px;">
+
+        </div>
+        <div id="title"><a href="{% url get_movie m.0.movie.mid %}" style="text-decoration: none"><b>{{ m.0.movie.title }}</b></a> </div>
+        </div>
+
+        {% endfor %}
+    {% endif %}
+    </div>
+{% endblock %}

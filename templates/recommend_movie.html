@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}The Movie You might also like{% endblock %}
+{% block content %}
+    {% if not movies %}
+        <p>There is nothing return, please make sure the movie name you've entered is correct!</p>
+    {% endif %}
+    {% if movies %}
+        <ul>
+            {% for movie in movies %}
+                <div id="movie_search_result" style="height: 95px;width: 700px">
+                    <div id="search_result_poster" style="background: url({{  movie.thumbnail }}) no-repeat center center;height: 95px;width: 65px;font:left;display: inline-block;margin-right: 10px;vertical-align: middle">
+
+                    </div>
+                    <div id="search_result_title" style="width:500px;display: inline-block;line-height: 90px">
+                        <a href="{% url get_movie movie.movie.mid %}">{{ movie.movie.title }}</a>
+                    </div>
+
+                </div>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+{% endblock %}

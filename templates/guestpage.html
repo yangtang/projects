@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block siderbar %}
+    <ul>
+        <li>{{ owner.first_name|title }} {{ owner.last_name|title }}</li>
+        <li>gender: {{ owner.gender }}</li>
+        <li>birthday: {{ owner.birthday }}</li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+    {% if feed %}
+        <p>{{ owner.first_name|title }} has rated these movies:</p>
+    {% for f in feed %}
+
+        <div id="movie_search_result" style="height: 90px;width: 650px;margin: 10px;background-color: #fff8dc">
+            <div id="search_result_poster" style="height: 90px;width: 60px;font:left;display: inline-block;margin-right: 10px; vertical-align: middle;background: url({{  f.image.thumbnail }}) no-repeat center center">
+
+            </div>
+            <div id="search_result_title" style="width:500px;display: inline-block;">
+                <a href="{% url get_movie f.text.movie.mid %}" style="text-decoration:none;color: #ff4500">{{ f.text.movie.title }}</a>: <a href="{% url home f.text.user.id %}"style="text-decoration:none;color: blue">{{ f.text.user.first_name|title }}</a> rated it <b><em><b>{{ f.text.rating }}</b></em></b> stars <a href="{% url get_comment f.text.id%}" style="font-size: 12px;color: blue;">see review and comments</a><br>
+            </div>
+
+        </div>
+     {% endfor %}
+    {% endif %}
+{% endblock %}

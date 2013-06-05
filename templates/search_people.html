@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title%}Result{% endblock %}
+
+{% block  content %}
+<p>You searched for: <strong>{{ query }}</strong></p>
+
+{% if results %}
+    <p>Found {{ results|length }} user{{ results|pluralize }}.</p>
+    <form action="{% url send_friend_request %}" method="post">{% csrf_token %}
+        {% for people in results %}
+            <label for="{{ forloop.counter }}"><a href="{% url visit people.id %}">{{ people.first_name }} {{ people.last_name }}</a></label>
+            <input type="radio" name="id" id="{{ forloop.counter }}" value="{{ people.id }}"/>
+        {% endfor %}
+        <br/>
+        message: <textarea rows="4" cols="50" name="message" >Enter what you want to say here...</textarea><br/>
+        <input type="submit" value="Send Friend Request" />
+    </form>
+
+
+{% else %}
+    <p>user not found</p>
+{% endif %}
+
+{% if errors %}
+    <ul style="color: blue;">
+        {% for error in errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}

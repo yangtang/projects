@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ user.first_name }} {{ user.first_name }}</title>
+</head>
+<body>
+<p> {{ user.first_name }}'home page </p><br />
+
+<p>{{ user.first_name }} {{ user.last_name }}</p>
+<ul>
+    <li>gender: {{ user.gender }}</li>
+    <li>birthday: {{ user.birthday }}</li>
+</ul>
+<a href="{% url home myself.id %}">back to my home page</a>
+
+{% if error %}
+{% endif %}
+
+<form action="{% url send_massage user.id %}" method='post'>{% csrf_token %}
+    <textarea rows="4" cols="50" name="message" >Enter what you want to say here...</textarea>
+    <input type="submit" value="Send">
+</form>
+<br/>
+
+{% if message %}
+    {% for m in message %}
+      <p>{{ m.from_who }}: {{ m.content }}</p>
+      <p> {{ m.time }}</p><br />
+    {% endfor %}
+{% endif %}
+
+</body>
+</html>

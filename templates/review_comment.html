@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div id="review">
+      <h4>{{ review.user.first_name|title }} rated {{ review.movie.title }} {{ review.rating }} stars and said:</h4>
+      <p>{{ review.review }} <a href="{% url make_comment review.id review.user.id %}" style="color: blue">-comment-</a></p>
+
+    </div>
+
+    <div id="comment" >
+      {% if comments %}
+      <ul>
+          {% for c in comments %}
+              {% if c.to_who%}
+              <li><p><em style="color: blue">{{ c.from_who.first_name|title }} replied to {{ c.to_who.first_name|title }}:</em>
+                   {{ c.comment }} <a href="{% url make_comment c.review.id c.from_who.id%}" style="color: blue">-reply-</a>
+                  </p>
+              </li>
+              {% endif %}
+          {% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+
+{% endblock %}

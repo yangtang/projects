@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ user }} {{ username }}</title>
+</head>
+<body>
+     <p>current user is {{ user }}, <a href="{% url logout %}" style="font-size:10px;">Log out</a> </p>
+
+     {% if error %}
+         <p style="color: red;">Please submit a search term.</p>
+     {% endif %}
+
+     {% if status %}
+         {% for s in status %}
+             <p>{{ s.content }}</p>
+             <p>{{ s.time }}</p>
+         {% endfor %}
+     {% endif %}
+
+     {% if friend_request %}
+         {% for p in friend_request %}
+             <ul>
+             <li>{{ p.from_who.first_name }} {{ p.from_who.last_name }}</li>
+             <li>{{ p.message }}</li>
+             </ul>
+             <p>Accept this request</p>
+             <form action="{% url request_handler %}" method="post">{% csrf_token %}
+                 <input type="radio" id="yes{{ forloop.counter }}" name="choice" value="{{ p.id }} y">yes<br />
+                 <input type="radio" id="no{{ forloop.counter }}" name="choice" value="{{ p.id }} n">no<br />
+                 <input type="submit" value="Submit">
+             </form>
+         {% endfor %}
+     {% endif %}
+
+     {% if friend_list %}
+         <ul>
+         {% for f in friend_list %}
+             <li><a href="{% url visit f.friend_two.id %}">{{ f.friend_two.first_name }} {{ f.friend_two.last_name }}</a></li>
+         {% endfor %}
+         </ul>
+     {% endif %}
+
+     <form action="{% url search_people %}" method="get">
+         <input type="text" name="q" >
+         <input type="submit" value="Search">
+     </form>
+
+     <form action="{% url send_status %}" method="post">{% csrf_token %}
+         <textarea rows="4" cols="50" name="status" >Enter what you want to say here...</textarea>
+         <input type="submit" value="Send">
+     </form>
+
+     {% if message %}
+         {% for m in message %}
+             <p>{{ m.from_who }}: {{ m.content }}</p>
+             <p> {{ m.time }}</p><br />
+         {% endfor %}
+     {% endif %}
+
+</body>
+</html>

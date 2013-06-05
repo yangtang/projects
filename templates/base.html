@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static "base.css" %}" />
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+<div id="container">
+
+     <div id="logo" >
+         <p style="font-size:20px;color:blue;text-align:center;">Movie Net</p>
+     </div>
+
+     <div id="movie_search" >
+         <form action="{% url search_movie %}" method="get" style="width: 400px;margin: 0 auto">
+           Movies: <input type="text" name="q" style="margin-top: 15px" size="40">
+            <input type="submit" value="Search">
+         </form>
+     </div>
+
+     <div id="user" >
+         <p style="text-align:center"><a href="{% url home user.id %}" style="text-decoration:none;font-size:25px;">{{ user.first_name|title }} {{ user.last_name|title }}</a>, <a href="{% url logout %}" style="font-size:10px;">Log out</a></p>
+     </div>
+
+    <div id="siderbar">
+
+        {% block siderbar %}
+        {% endblock %}
+
+        <ul>
+            <li><a href="http://www.imdb.com/" target="_blank">IMDB</a></li>
+            <li><a href="http://www.rottentomatoes.com/" target="_blank">Rotten Tomatoes</a></li>
+        </ul>
+    </div>
+
+    <div id="content">
+         {% block content %}{% endblock %}
+    </div>
+
+    <div id="message">
+        {% block message %}{% endblock %}
+    </div>
+
+    <div id="friend_list" >
+        {% block friend_list %}{% endblock %}
+    </div>
+
+
+
+
+
+
+</div>
+
+</body>
+</html>

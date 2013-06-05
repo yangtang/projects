@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <form action="{% url submit_comment review to_user %}" method="post">
+        {% csrf_token %}
+        <textarea rows="4" cols="50" name="comment"></textarea>
+        <input type="submit" value="Submit"/>
+    </form>
+</body>
+</html>
